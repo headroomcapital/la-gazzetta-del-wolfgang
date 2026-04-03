@@ -297,13 +297,44 @@
   }
 
   .latest__item {
-    display: block;
+    display: grid;
+    grid-template-columns: clamp(100px, 12vw, 160px) 1fr;
+    gap: 20px;
+    align-items: start;
     padding: 22px 0;
     border-bottom: 1px solid var(--border);
     transition: opacity 0.2s;
   }
 
   .latest__item:hover { opacity: 0.6; }
+
+  .latest__item-thumb {
+    aspect-ratio: 5 / 4;
+    overflow: hidden;
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .latest__item-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+    transition: filter 0.3s, mix-blend-mode 0.3s, opacity 0.3s;
+  }
+
+  .latest__item:hover .latest__item-thumb img {
+    filter: grayscale(0%);
+    mix-blend-mode: normal;
+    opacity: 1;
+  }
+
+  .latest__item-body {
+    display: flex;
+    flex-direction: column;
+  }
 
   .latest__item-title {
     font-family: var(--font-display);
@@ -329,6 +360,10 @@
     align-items: center;
     opacity: 0.55;
     font-size: clamp(11px, 0.95vw, 13px);
+  }
+
+  @media (max-width: 480px) {
+    .latest__item { grid-template-columns: 80px 1fr; gap: 12px; }
   }
 
 
@@ -785,6 +820,18 @@ function estimateReadTime(piece) {
 
 /* ─── RENDER ─── */
 // "Why it matters" map — human-angle micro-lines for featured pieces
+const IMAGE_MAP = {
+  'The Quiet Part: Most brands are boring and most brands know it': 'https://www.thewolfgangproject.com/images/TheQuietPart.png',
+  'Six designers, one van, forty years of mythology': 'https://www.thewolfgangproject.com/images/TheAntwerpSix.jpg',
+  'Apple wiped its TikTok and started posting limes FaceTiming lemons': 'https://www.thewolfgangproject.com/images/brainrot-paradox.jpg',
+  'Agencies are cutting strategists and hiring engineers. This is exactly backward.': 'https://www.thewolfgangproject.com/images/creative-ai-lights.jpg',
+  'Future-Proofing the Netherlands': 'https://www.thewolfgangproject.com/images/hackathon-classroom-reading.jpg',
+  'A$AP Rocky is curating 1951 modernist houses now. So is everyone else.': 'https://www.thewolfgangproject.com/images/ASAP.jpg',
+  'Every brand looks the same now. The cost is higher than anyone is measuring.': 'https://www.thewolfgangproject.com/images/taste-recession.jpg',
+  'The museum gift shop has no queue. That is not a problem.': 'https://www.thewolfgangproject.com/images/Giftshop.png',
+  'Nobody in the creative industry can see three feet ahead': 'https://www.thewolfgangproject.com/images/flashlight.png',
+};
+
 const WHY_MAP = {
   'The Quiet Part: Most brands are boring and most brands know it': 'Boredom is a strategy failure, not a marketing failure.',
   'Six designers, one van, forty years of mythology': 'Shared context beats collaboration every time.',
@@ -818,15 +865,21 @@ function renderLatest(pieces) {
     const href = `${CONFIG.baseUrl}/brief/${slug(p.title)}`;
     const dek = getSubtitle(p);
     const shortDek = dek ? dek.split(/\s+/).slice(0, 14).join(' ') : '';
+    const img = IMAGE_MAP[p.title] || '';
     return `
       <li>
         <a href="${href}" target="_blank" class="latest__item">
-          <div class="latest__item-title">${esc(p.title)}</div>
-          ${shortDek ? `<div class="latest__item-dek">${esc(shortDek)}${dek.split(/\s+/).length > 14 ? '...' : ''}</div>` : ''}
-          <div class="latest__item-meta label">
-            <span>${esc(p.piece_type || '')}</span>
-            <span>·</span>
-            <span>${shortDate(p.created_at)}</span>
+          <div class="latest__item-thumb">
+            ${img ? `<img src="${img}" alt="" loading="lazy">` : ''}
+          </div>
+          <div class="latest__item-body">
+            <div class="latest__item-title">${esc(p.title)}</div>
+            ${shortDek ? `<div class="latest__item-dek">${esc(shortDek)}${dek.split(/\s+/).length > 14 ? '...' : ''}</div>` : ''}
+            <div class="latest__item-meta label">
+              <span>${esc(p.piece_type || '')}</span>
+              <span>·</span>
+              <span>${shortDate(p.created_at)}</span>
+            </div>
           </div>
         </a>
       </li>
