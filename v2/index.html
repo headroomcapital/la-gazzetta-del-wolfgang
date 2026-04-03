@@ -127,6 +127,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 48px;
     align-items: start;
+    background: var(--text);
+    color: var(--bg);
   }
 
   .hero__media {
@@ -174,34 +176,36 @@
     text-transform: uppercase;
     letter-spacing: -0.02em;
     margin-bottom: 16px;
+    transition: opacity 0.2s;
   }
+
+  .hero__title:hover { opacity: 0.7; }
 
   .hero__dek {
     font-size: var(--size-body);
     line-height: 1.6;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     max-width: 520px;
+  }
+
+  .hero__why {
+    font-size: var(--size-label);
+    font-weight: 700;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+
+  .hero__why strong {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   .hero__meta {
     display: flex;
     gap: 16px;
     align-items: center;
-    margin-bottom: 20px;
-    opacity: 0.6;
+    opacity: 0.5;
   }
-
-  .hero__read-link {
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-size: var(--size-label);
-    border-bottom: 2px solid var(--text);
-    padding-bottom: 2px;
-    transition: opacity 0.2s;
-  }
-
-  .hero__read-link:hover { opacity: 0.5; }
 
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; gap: 24px; }
@@ -243,44 +247,36 @@
   }
 
   .latest__item {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 24px;
-    align-items: baseline;
-    padding: 14px 0;
+    display: block;
+    padding: 18px 0;
     border-bottom: 1px solid var(--border);
     transition: opacity 0.2s;
   }
 
   .latest__item:hover { opacity: 0.6; }
 
-  .latest__item-left {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
   .latest__item-title {
     font-family: var(--font-display);
-    font-size: clamp(15px, 1.3vw, 19px);
+    font-size: clamp(16px, 1.4vw, 20px);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.01em;
-    line-height: 1.3;
+    line-height: 1.35;
+    margin-bottom: 6px;
   }
 
   .latest__item-dek {
     font-size: var(--size-body);
-    opacity: 0.5;
-    line-height: 1.4;
+    opacity: 0.7;
+    line-height: 1.5;
+    margin-bottom: 6px;
   }
 
   .latest__item-meta {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
-    white-space: nowrap;
-    opacity: 0.5;
+    opacity: 0.45;
   }
 
 
@@ -448,8 +444,11 @@
   </div>
   <div class="hero__body">
     <div class="hero__cat label" id="hero-cat"></div>
-    <h1 class="hero__title" id="hero-title"></h1>
+    <a href="#" id="hero-link" style="text-decoration:none;color:inherit;">
+      <h1 class="hero__title" id="hero-title"></h1>
+    </a>
     <p class="hero__dek" id="hero-dek"></p>
+    <p class="hero__why" id="hero-why"></p>
     <div class="hero__meta label">
       <span>By The Wolfgang Project</span>
       <span>·</span>
@@ -457,7 +456,6 @@
       <span>·</span>
       <span id="hero-read-time"></span>
     </div>
-    <a href="#" class="hero__read-link" id="hero-link">Read</a>
   </div>
 </article>
 
@@ -564,11 +562,24 @@ function estimateReadTime(piece) {
 }
 
 /* ─── RENDER ─── */
+// "Why it matters" map — human-angle micro-lines for featured pieces
+const WHY_MAP = {
+  'The Quiet Part: Most brands are boring and most brands know it': 'Boredom is a strategy failure, not a marketing failure.',
+  'Six designers, one van, forty years of mythology': 'Shared context beats collaboration every time.',
+  'Agencies are cutting strategists and hiring engineers. This is exactly backward.': 'The industry is optimizing for the wrong thing.',
+  'Apple wiped its TikTok and started posting limes FaceTiming lemons': 'Discipline looks like chaos when you have taste.',
+  'Every brand looks the same now. The cost is higher than anyone is measuring.': 'Homogeneity has a price. Nobody is tracking it.',
+};
+
 function renderHero(piece) {
   const href = `${CONFIG.baseUrl}/brief/${slug(piece.title)}`;
   document.getElementById('hero-cat').textContent = `${piece.piece_type || ''} / ${piece.territory || ''}`;
   document.getElementById('hero-title').textContent = piece.title;
   document.getElementById('hero-dek').textContent = getSubtitle(piece);
+  const why = WHY_MAP[piece.title] || '';
+  if (why) {
+    document.getElementById('hero-why').innerHTML = `<strong>Why it matters:</strong> ${esc(why)}`;
+  }
   document.getElementById('hero-date').textContent = shortDate(piece.created_at);
   document.getElementById('hero-read-time').textContent = estimateReadTime(piece);
   document.getElementById('hero-link').href = href;
@@ -584,18 +595,17 @@ function renderLatest(pieces) {
   list.innerHTML = pieces.map(p => {
     const href = `${CONFIG.baseUrl}/brief/${slug(p.title)}`;
     const dek = getSubtitle(p);
-    const shortDek = dek ? dek.split(/\s+/).slice(0, 12).join(' ') : '';
+    const shortDek = dek ? dek.split(/\s+/).slice(0, 14).join(' ') : '';
     return `
       <li>
         <a href="${href}" target="_blank" class="latest__item">
-          <div class="latest__item-left">
-            <span class="latest__item-title">${esc(p.title)}</span>
-            ${shortDek ? `<span class="latest__item-dek">${esc(shortDek)}${dek.split(/\s+/).length > 12 ? '...' : ''}</span>` : ''}
-          </div>
-          <span class="latest__item-meta label">
+          <div class="latest__item-title">${esc(p.title)}</div>
+          ${shortDek ? `<div class="latest__item-dek">${esc(shortDek)}${dek.split(/\s+/).length > 14 ? '...' : ''}</div>` : ''}
+          <div class="latest__item-meta label">
             <span>${esc(p.piece_type || '')}</span>
+            <span>·</span>
             <span>${shortDate(p.created_at)}</span>
-          </span>
+          </div>
         </a>
       </li>
     `;
