@@ -254,6 +254,12 @@
 
   .latest__item:hover { opacity: 0.6; }
 
+  .latest__item-left {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
   .latest__item-title {
     font-family: var(--font-display);
     font-size: clamp(15px, 1.3vw, 19px);
@@ -261,6 +267,12 @@
     text-transform: uppercase;
     letter-spacing: 0.01em;
     line-height: 1.3;
+  }
+
+  .latest__item-dek {
+    font-size: var(--size-body);
+    opacity: 0.5;
+    line-height: 1.4;
   }
 
   .latest__item-meta {
@@ -439,10 +451,13 @@
     <h1 class="hero__title" id="hero-title"></h1>
     <p class="hero__dek" id="hero-dek"></p>
     <div class="hero__meta label">
+      <span>By The Wolfgang Project</span>
+      <span>·</span>
       <span id="hero-date"></span>
+      <span>·</span>
       <span id="hero-read-time"></span>
     </div>
-    <a href="#" class="hero__read-link" id="hero-link">Read the piece →</a>
+    <a href="#" class="hero__read-link" id="hero-link">Read</a>
   </div>
 </article>
 
@@ -460,7 +475,7 @@
 <!-- ═══════ BLOCK 3: NEWSLETTER ═══════ -->
 <section class="newsletter" id="newsletter">
   <h2 class="newsletter__heading"><em>Wolfgang Weekly.</em> Every Monday.</h2>
-  <p class="newsletter__sub">Cultural intelligence for people who build brands. The things worth reading slowly.</p>
+  <p class="newsletter__sub">One essay, one signal, one uncomfortable question. On AI, work, taste, and the humans in between.</p>
   <div class="newsletter__form">
     <input type="email" class="newsletter__input" placeholder="Your email">
     <button class="newsletter__btn">Subscribe</button>
@@ -482,12 +497,6 @@
       <a href="#">The Wolfgang Project</a>
       <a href="#">How We Think</a>
       <a href="#">Contact</a>
-    </div>
-    <div class="footer__col">
-      <div class="footer__col-title label">Tools</div>
-      <a href="#">Assessment</a>
-      <a href="#">Brand Clinic</a>
-      <a href="#">Decoder</a>
     </div>
     <div class="footer__col">
       <div class="footer__col-title label">Follow</div>
@@ -574,10 +583,15 @@ function renderLatest(pieces) {
   const list = document.getElementById('latest-list');
   list.innerHTML = pieces.map(p => {
     const href = `${CONFIG.baseUrl}/brief/${slug(p.title)}`;
+    const dek = getSubtitle(p);
+    const shortDek = dek ? dek.split(/\s+/).slice(0, 12).join(' ') : '';
     return `
       <li>
         <a href="${href}" target="_blank" class="latest__item">
-          <span class="latest__item-title">${esc(p.title)}</span>
+          <div class="latest__item-left">
+            <span class="latest__item-title">${esc(p.title)}</span>
+            ${shortDek ? `<span class="latest__item-dek">${esc(shortDek)}${dek.split(/\s+/).length > 12 ? '...' : ''}</span>` : ''}
+          </div>
           <span class="latest__item-meta label">
             <span>${esc(p.piece_type || '')}</span>
             <span>${shortDate(p.created_at)}</span>
