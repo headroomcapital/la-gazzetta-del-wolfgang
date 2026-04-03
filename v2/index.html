@@ -56,6 +56,45 @@
   }
 
 
+  /* ─── TICKER ─── */
+  .ticker {
+    background: var(--text);
+    color: var(--bg);
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,241,229,0.15);
+  }
+
+  .ticker__track {
+    display: inline-block;
+    animation: ticker-scroll 60s linear infinite;
+  }
+
+  .ticker__item {
+    display: inline;
+  }
+
+  .ticker__item::after {
+    content: " \2026\00a0\00a0 ";
+    opacity: 0.4;
+  }
+
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker:hover .ticker__track {
+    animation-play-state: paused;
+  }
+
+
   /* ─── MASTHEAD ─── */
   .masthead {
     position: sticky;
@@ -103,6 +142,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     width: 100%;
     padding: 8px 0 6px;
     border-top: 1px solid var(--text);
@@ -119,18 +159,10 @@
   .masthead-nav a:hover { opacity: 0.5; }
 
   .masthead-tagline {
-    font-family: var(--font-mono);
-    font-size: var(--size-label);
-    opacity: 0.5;
-    letter-spacing: 0.02em;
-    text-align: center;
-    padding: 0;
-    margin-top: -4px;
-    margin-bottom: 6px;
-  }
-
-  .masthead.scrolled .masthead-tagline {
-    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
   }
 
   .masthead-date {
@@ -162,6 +194,7 @@
     height: 100%;
     object-fit: cover;
     filter: grayscale(100%);
+    mix-blend-mode: multiply;
     opacity: 0.85;
     transform: scale(1.15);
     transition: filter 0.45s ease, opacity 0.45s ease, mix-blend-mode 0.45s ease;
@@ -170,6 +203,7 @@
   .hero:hover .hero__media video,
   .hero:hover .hero__media img {
     filter: grayscale(0%);
+    mix-blend-mode: normal;
     opacity: 1;
   }
 
@@ -273,11 +307,11 @@
 
   .latest__item-title {
     font-family: var(--font-display);
-    font-size: clamp(16px, 1.4vw, 20px);
+    font-size: clamp(24px, 3vw, 40px);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.01em;
-    line-height: 1.35;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
     margin-bottom: 8px;
   }
 
@@ -295,6 +329,127 @@
     align-items: center;
     opacity: 0.55;
     font-size: clamp(11px, 0.95vw, 13px);
+  }
+
+
+  /* ─── TOOLS ─── */
+  .tools {
+    background: var(--text);
+    color: var(--bg);
+    padding: 56px var(--page-pad);
+    border-bottom: 1px solid rgba(255,241,229,0.15);
+  }
+
+  .tools__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,241,229,0.2);
+  }
+
+  .tools__title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 40px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+
+  .tools__subtitle {
+    font-size: var(--size-body);
+    opacity: 0.5;
+    margin-bottom: 32px;
+  }
+
+  .tools__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 48px;
+  }
+
+  .tools__card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tools__card-icon {
+    font-size: 20px;
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .tools__card-name {
+    font-family: var(--font-display);
+    font-size: clamp(16px, 1.4vw, 22px);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .tools__card-dek {
+    font-size: var(--size-body);
+    opacity: 0.6;
+    line-height: 1.5;
+  }
+
+  .tools__card-link {
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .tools__card-link:hover { opacity: 1; }
+
+  @media (max-width: 768px) {
+    .tools__grid { grid-template-columns: 1fr; }
+  }
+
+
+  /* ─── BRANDS TICKER ─── */
+  .brands-ticker {
+    background: var(--text);
+    color: var(--bg);
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: var(--size-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255,241,229,0.15);
+  }
+
+  .brands-ticker__track {
+    display: inline-block;
+    animation: brands-scroll 50s linear infinite;
+  }
+
+  .brands-ticker:hover .brands-ticker__track {
+    animation-play-state: paused;
+  }
+
+  .brands-ticker__item {
+    display: inline;
+    opacity: 0.5;
+  }
+
+  .brands-ticker__item::after {
+    content: " \2026\00a0\00a0 ";
+    opacity: 0.4;
+  }
+
+  @keyframes brands-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
 
@@ -441,11 +596,15 @@
 <body>
 
 
+<!-- ═══════ TICKER ═══════ -->
+<div class="ticker" id="ticker">
+  <div class="ticker__track" id="ticker-track"></div>
+</div>
+
 <!-- ═══════ MASTHEAD ═══════ -->
 <header class="masthead">
   <div class="masthead-brand">
     <div class="masthead-logo">La Gazzetta del Wolfgang</div>
-    <div class="masthead-tagline">Opinion on AI and tech — written for humans, not product teams.</div>
     <div class="masthead-bar">
       <ul class="masthead-nav">
         <li><a href="#" class="nav-link label">Articles</a></li>
@@ -453,6 +612,7 @@
         <li><a href="#" class="nav-link label">About</a></li>
         <li><a href="#newsletter" class="nav-link label">Newsletter</a></li>
       </ul>
+      <span class="masthead-tagline label">Cultural Intelligence — written for humans.</span>
       <span class="masthead-date label" id="today-date"></span>
     </div>
   </div>
@@ -490,6 +650,46 @@
   </div>
   <ul class="latest__list" id="latest-list"></ul>
 </section>
+
+
+<!-- ═══════ TOOLS ═══════ -->
+<section class="tools">
+  <div class="tools__header">
+    <h2 class="tools__title">Things We Built</h2>
+  </div>
+  <p class="tools__subtitle">Cultural intelligence instruments</p>
+  <div class="tools__grid">
+    <div class="tools__card">
+      <div class="tools__card-icon">&#9670;</div>
+      <div class="tools__card-name">Cultural Intelligence Assessment</div>
+      <div class="tools__card-dek">14 archetypes. 30 questions. Takes 4 minutes. Hurts a little.</div>
+      <a href="#" class="tools__card-link">Take the test &rarr;</a>
+    </div>
+    <div class="tools__card">
+      <div class="tools__card-icon">+</div>
+      <div class="tools__card-name">Brand Health Clinic</div>
+      <div class="tools__card-dek">Enter any brand. Get an honest diagnosis. No euphemisms.</div>
+      <a href="#" class="tools__card-link">Run a diagnosis &rarr;</a>
+    </div>
+    <div class="tools__card">
+      <div class="tools__card-icon">&#10064;</div>
+      <div class="tools__card-name">Cultural Decoder</div>
+      <div class="tools__card-dek">Paste anything. Find out what it actually communicates.</div>
+      <a href="#" class="tools__card-link">Decode something &rarr;</a>
+    </div>
+    <div class="tools__card">
+      <div class="tools__card-icon">&#9646;</div>
+      <div class="tools__card-name">Case</div>
+      <div class="tools__card-dek">Not a chatbot. A thinking partner named after the robot in Interstellar.</div>
+      <a href="#" class="tools__card-link">Start thinking &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ BRANDS TICKER ═══════ -->
+<div class="brands-ticker">
+  <div class="brands-ticker__track" id="brands-track"></div>
+</div>
 
 
 <!-- ═══════ BLOCK 3: NEWSLETTER ═══════ -->
@@ -634,6 +834,24 @@ function renderLatest(pieces) {
   }).join('');
 }
 
+function renderTicker(pieces) {
+  const lines = pieces.map(p => {
+    const why = WHY_MAP[p.title];
+    return why || p.title;
+  });
+  const track = document.getElementById('ticker-track');
+  // Duplicate content for seamless loop
+  const html = lines.map(l => `<span class="ticker__item">${esc(l)}</span>`).join('');
+  track.innerHTML = html + html;
+}
+
+function renderBrandsTicker() {
+  const brands = ['Volkswagen Group','MOIA','TRATON','WeShare','NN','Heineken','Amstel','Starbucks','Kikkoman','Diageo','Unilever','Beats by Dre','Nikon','Philips','Hertz','Audi','car2go','Hi-Tec','Dutch Government','City of Amsterdam','Japanese Tourism Board'];
+  const track = document.getElementById('brands-track');
+  const html = brands.map(b => `<span class="brands-ticker__item">${esc(b)}</span>`).join('');
+  track.innerHTML = html + html;
+}
+
 function renderDate() {
   document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-GB', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -643,6 +861,7 @@ function renderDate() {
 /* ─── INIT ─── */
 async function init() {
   renderDate();
+  renderBrandsTicker();
 
   try {
     const res = await fetch(CONFIG.apiUrl);
@@ -651,6 +870,7 @@ async function init() {
     const pieces = (data.pieces || []).filter(p => !skip.some(w => p.title.includes(w)));
 
     if (pieces.length > 0) {
+      renderTicker(pieces);
       renderHero(pieces[0]);
       renderLatest(pieces.slice(1, 9));
     }
