@@ -78,6 +78,13 @@
 
   .ticker__item {
     display: inline;
+    color: var(--bg);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .ticker__item:hover {
+    opacity: 0.6;
   }
 
   .ticker__item::after {
@@ -892,13 +899,13 @@ function renderLatest(pieces) {
 }
 
 function renderTicker(pieces) {
-  const lines = pieces.map(p => {
-    const why = WHY_MAP[p.title];
-    return why || p.title;
+  const items = pieces.map(p => {
+    const href = `${CONFIG.baseUrl}/brief/${slug(p.title)}`;
+    const text = WHY_MAP[p.title] || p.title;
+    return { text, href };
   });
   const track = document.getElementById('ticker-track');
-  // Duplicate content for seamless loop
-  const html = lines.map(l => `<span class="ticker__item">${esc(l)}</span>`).join('');
+  const html = items.map(i => `<a href="${i.href}" target="_blank" class="ticker__item">${esc(i.text)}</a>`).join('');
   track.innerHTML = html + html;
 }
 
